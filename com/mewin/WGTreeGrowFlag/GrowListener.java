@@ -69,20 +69,16 @@ public class GrowListener implements Listener {
                 BlockState state = itr.next();
 
                 ApplicableRegionSet blockRegions = rm.getApplicableRegions(state.getLocation());
+                Iterator<ProtectedRegion> itr2 = blockRegions.iterator();
 
-                if (state.getType() == Material.LEAVES || state.getType() == Material.LOG)
+                while (itr2.hasNext())
                 {
-                    Iterator<ProtectedRegion> itr2 = blockRegions.iterator();
+                    ProtectedRegion region = itr2.next();
+                    State flagState = region.getFlag(WGTreeGrowFlagPlugin.LEAVE_GROW_FLAG);
 
-                    while (itr2.hasNext())
+                    if (flagState == State.DENY && !regCol.contains(region))
                     {
-                        ProtectedRegion region = itr2.next();
-                        State flagState = region.getFlag(WGTreeGrowFlagPlugin.LEAVE_GROW_FLAG);
-
-                        if (flagState == State.DENY && !regCol.contains(region))
-                        {
-                            itr.remove();
-                        }
+                        itr.remove();
                     }
                 }
             }
