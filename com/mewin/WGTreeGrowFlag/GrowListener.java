@@ -70,7 +70,7 @@ public class GrowListener implements Listener {
 
                 ApplicableRegionSet blockRegions = rm.getApplicableRegions(state.getLocation());
 
-                if (state.getType() == Material.LEAVES)
+                if (state.getType() == Material.LEAVES || state.getType() == Material.LOG)
                 {
                     Iterator<ProtectedRegion> itr2 = blockRegions.iterator();
 
