@@ -1,6 +1,8 @@
-name: WGTreeGrowFlag
-author: mewin
+name: WGTreeGrowFlags
+main: com.mewin.WGTreeGrowFlags.WGTreeGrowFlagsPlugin
+description: WorldGuard extension to deny tree growing in regions or to deny growing of leaves in a region if the tree is based in another region.
 version: 1.0
-main: com.mewin.WGTreeGrowFlag.WGTreeGrowFlagPlugin
+
+authors: [ mewin ]
 depend: [ WorldGuard, WGCustomFlags ]
 softdepend: [ WorldEdit ]
