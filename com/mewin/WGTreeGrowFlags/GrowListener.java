@@ -24,6 +24,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import org.bukkit.ChatColor;
 import org.bukkit.block.BlockState;
@@ -58,7 +59,7 @@ public class GrowListener implements Listener {
         }
         
         ApplicableRegionSet regions = rm.getApplicableRegions(e.getLocation());
-        Collection<ProtectedRegion> regCol = (Collection<ProtectedRegion>) getPrivateValue(regions, "applicable");
+        Collection<ProtectedRegion> regCol = removeParents((Collection<ProtectedRegion>) getPrivateValue(regions, "applicable"));
         
         if (!regions.allows(WGTreeGrowFlagsPlugin.TREE_GROW_FLAG))
         {
@@ -79,7 +80,7 @@ public class GrowListener implements Listener {
             {
                 BlockState state = itr.next();
 
-                ApplicableRegionSet blockRegions = rm.getApplicableRegions(state.getLocation());
+                Collection<ProtectedRegion> blockRegions = removeParents((Collection<ProtectedRegion>) getPrivateValue(rm.getApplicableRegions(state.getLocation()), "applicable"));
                 Iterator<ProtectedRegion> itr2 = blockRegions.iterator();
 
                 while (itr2.hasNext())
@@ -94,6 +95,31 @@ public class GrowListener implements Listener {
                 }
             }
         }
+    }
+    
+    private HashSet<ProtectedRegion> removeParents(Collection<ProtectedRegion> pRegions)
+    {
+        HashSet<ProtectedRegion> regions = new HashSet<>(pRegions);
+        HashSet<ProtectedRegion> regionsToRemove = new HashSet<>();
+        
+        for (ProtectedRegion region : regions)
+        {
+            ProtectedRegion parent = region.getParent();
+            
+            while(parent != null)
+            {
+                regionsToRemove.add(parent);
+                
+                parent = parent.getParent();
+            }
+        }
+        
+        for (ProtectedRegion parent : regionsToRemove)
+        {
+            regions.remove(parent);
+        }
+        
+        return regions;
     }
     
     private Object getPrivateValue(Object obj, String name)
