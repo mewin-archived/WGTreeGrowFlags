@@ -16,7 +16,6 @@
  */
 package com.mewin.WGTreeGrowFlags;
 
-import com.mewin.WGCustomFlags.WGCustomFlagsPlugin;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
@@ -37,15 +36,11 @@ import org.bukkit.event.world.StructureGrowEvent;
  * @author mewin <mewin001@hotmail.de>
  */
 public class GrowListener implements Listener {
-    private WGCustomFlagsPlugin custPlugin;
     private WorldGuardPlugin wgPlugin;
-    private WGTreeGrowFlagsPlugin plugin;
     
-    public GrowListener(WGTreeGrowFlagsPlugin plugin, WorldGuardPlugin wgPlugin, WGCustomFlagsPlugin custPlugin)
+    public GrowListener(WorldGuardPlugin wgPlugin)
     {
-        this.custPlugin = custPlugin;
         this.wgPlugin = wgPlugin;
-        this.plugin = plugin;
     }
     
     @EventHandler
@@ -99,8 +94,8 @@ public class GrowListener implements Listener {
     
     private HashSet<ProtectedRegion> removeParents(Collection<ProtectedRegion> pRegions)
     {
-        HashSet<ProtectedRegion> regions = new HashSet<>(pRegions);
-        HashSet<ProtectedRegion> regionsToRemove = new HashSet<>();
+        HashSet<ProtectedRegion> regions = new HashSet<ProtectedRegion>(pRegions);
+        HashSet<ProtectedRegion> regionsToRemove = new HashSet<ProtectedRegion>();
         
         for (ProtectedRegion region : regions)
         {
@@ -130,7 +125,19 @@ public class GrowListener implements Listener {
             f.setAccessible(true);
             return f.get(obj);
         }
-        catch(NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex)
+        catch(NoSuchFieldException ex)
+        {
+            return null;
+        }
+        catch(SecurityException ex)
+        {
+            return null;
+        }
+        catch(IllegalArgumentException ex)
+        {
+            return null;
+        }
+        catch(IllegalAccessException ex)
         {
             return null;
         }
